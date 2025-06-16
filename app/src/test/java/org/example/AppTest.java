@@ -6,9 +6,41 @@ package org.example;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.BeforeEach;
+
 class AppTest {
-    @Test void appHasAGreeting() {
-        App classUnderTest = new App();
-        assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
+
+    private GroceryCounter counter;
+
+    @BeforeEach
+    public void setup() {
+        counter = new GroceryCounter();
     }
+    @Test
+    public void testTenthsRollsOverToOnes() {
+        for (int i = 0; i < 10; i++) {
+            counter.tenths();
+        }
+        assertEquals("$1.00", counter.total());
+    }
+
+
+    @Test
+    public void testMultipleOverflows() {
+        for (int i = 0; i < 25000; i++) {
+            counter.hundredths();
+        }
+        assertEquals(2, counter.overflows());
+}
+
+     @Test
+    public void testTensRollsOverWithOverflow() {
+        for (int i = 0; i < 10; i++) {
+            counter.tens();
+        }
+        assertEquals("$0.01", counter.total());
+        assertEquals(1, counter.overflows());
+    }
+
+
 }
